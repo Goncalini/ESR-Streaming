@@ -11,8 +11,8 @@ node n1 {
 	!
     }
     canvas c1
-    iconcoords {967.0 422.0}
-    labelcoords {967.0 454.0}
+    iconcoords {949.0 211.0}
+    labelcoords {949.0 243.0}
     services {DefaultRoute SSH}
     interface-peer {eth0 n3}
 }
@@ -40,8 +40,8 @@ node n2 {
 	!
     }
     canvas c1
-    iconcoords {808.0 336.0}
-    labelcoords {808.0 368.0}
+    iconcoords {837.0 312.0}
+    labelcoords {837.0 344.0}
     services {zebra OSPFv2 OSPFv3 IPForward}
     interface-peer {eth1 n5}
     interface-peer {eth2 n6}
@@ -76,8 +76,8 @@ node n3 {
 	!
     }
     canvas c1
-    iconcoords {882.0 420.0}
-    labelcoords {882.0 452.0}
+    iconcoords {952.0 413.0}
+    labelcoords {952.0 445.0}
     services {zebra OSPFv2 OSPFv3 IPForward}
     interface-peer {eth0 n1}
     interface-peer {eth1 n5}
@@ -108,8 +108,8 @@ node n4 {
 	!
     }
     canvas c1
-    iconcoords {811.0 492.0}
-    labelcoords {811.0 524.0}
+    iconcoords {841.0 524.0}
+    labelcoords {841.0 556.0}
     services {zebra OSPFv2 OSPFv3 IPForward}
     interface-peer {eth1 n5}
     interface-peer {eth2 n7}
@@ -154,8 +154,8 @@ node n5 {
 	!
     }
     canvas c1
-    iconcoords {726.0 416.0}
-    labelcoords {726.0 448.0}
+    iconcoords {750.0 413.0}
+    labelcoords {750.0 445.0}
     services {zebra OSPFv2 OSPFv3 IPForward}
     interface-peer {eth0 n3}
     interface-peer {eth1 n2}
@@ -193,8 +193,8 @@ node n6 {
 	!
     }
     canvas c1
-    iconcoords {600.0 299.0}
-    labelcoords {600.0 331.0}
+    iconcoords {600.0 263.0}
+    labelcoords {600.0 295.0}
     services {zebra OSPFv2 OSPFv3 IPForward}
     interface-peer {eth0 n2}
     interface-peer {eth2 n9}
@@ -230,8 +230,8 @@ node n7 {
 	!
     }
     canvas c1
-    iconcoords {607.0 526.0}
-    labelcoords {607.0 558.0}
+    iconcoords {605.0 508.0}
+    labelcoords {605.0 540.0}
     services {zebra OSPFv2 OSPFv3 IPForward}
     interface-peer {eth0 n4}
     interface-peer {eth2 n11}
@@ -267,8 +267,8 @@ node n8 {
 	!
     }
     canvas c1
-    iconcoords {603.0 414.0}
-    labelcoords {603.0 446.0}
+    iconcoords {609.0 394.0}
+    labelcoords {609.0 426.0}
     services {zebra OSPFv2 OSPFv3 IPForward}
     interface-peer {eth0 n5}
     interface-peer {eth3 n10}
@@ -309,8 +309,8 @@ node n9 {
 	!
     }
     canvas c1
-    iconcoords {459.0 207.0}
-    labelcoords {459.0 239.0}
+    iconcoords {443.0 203.0}
+    labelcoords {443.0 235.0}
     services {zebra OSPFv2 OSPFv3 IPForward}
     interface-peer {eth0 n6}
     interface-peer {eth1 n10}
@@ -367,8 +367,8 @@ node n10 {
 	!
     }
     canvas c1
-    iconcoords {456.0 395.0}
-    labelcoords {456.0 427.0}
+    iconcoords {444.0 394.0}
+    labelcoords {444.0 426.0}
     services {zebra OSPFv2 OSPFv3 IPForward}
     interface-peer {eth0 n8}
     interface-peer {eth1 n9}
@@ -413,8 +413,8 @@ node n11 {
 	!
     }
     canvas c1
-    iconcoords {457.0 559.0}
-    labelcoords {457.0 591.0}
+    iconcoords {443.0 575.0}
+    labelcoords {443.0 607.0}
     services {zebra OSPFv2 OSPFv3 IPForward}
     interface-peer {eth0 n7}
     interface-peer {eth1 n10}
@@ -436,8 +436,8 @@ node n12 {
 	!
     }
     canvas c1
-    iconcoords {115.0 257.0}
-    labelcoords {115.0 289.0}
+    iconcoords {25.0 266.0}
+    labelcoords {25.0 298.0}
     services {DefaultRoute}
     interface-peer {eth0 n18}
 }
@@ -455,8 +455,8 @@ node n13 {
 	!
     }
     canvas c1
-    iconcoords {114.0 359.0}
-    labelcoords {114.0 391.0}
+    iconcoords {22.0 359.0}
+    labelcoords {22.0 391.0}
     services {DefaultRoute}
     interface-peer {eth0 n19}
 }
@@ -474,8 +474,8 @@ node n14 {
 	!
     }
     canvas c1
-    iconcoords {109.0 454.0}
-    labelcoords {109.0 486.0}
+    iconcoords {22.0 458.0}
+    labelcoords {22.0 490.0}
     services {DefaultRoute}
     interface-peer {eth0 n19}
 }
@@ -493,8 +493,8 @@ node n15 {
 	!
     }
     canvas c1
-    iconcoords {106.0 548.0}
-    labelcoords {106.0 580.0}
+    iconcoords {24.0 554.0}
+    labelcoords {24.0 586.0}
     services {DefaultRoute}
     interface-peer {eth0 n20}
 }
@@ -512,8 +512,8 @@ node n16 {
 	!
     }
     canvas c1
-    iconcoords {154.0 608.0}
-    labelcoords {154.0 640.0}
+    iconcoords {72.0 648.0}
+    labelcoords {72.0 680.0}
     services {DefaultRoute}
     interface-peer {eth0 n20}
 }
@@ -531,8 +531,8 @@ node n17 {
 	!
     }
     canvas c1
-    iconcoords {163.0 230.0}
-    labelcoords {163.0 262.0}
+    iconcoords {116.0 217.0}
+    labelcoords {116.0 249.0}
     services {DefaultRoute}
     interface-peer {eth0 n18}
 }
@@ -544,8 +544,8 @@ node n18 {
 	!
     }
     canvas c1
-    iconcoords {187.0 296.0}
-    labelcoords {187.0 320.0}
+    iconcoords {137.0 297.0}
+    labelcoords {137.0 321.0}
     interface-peer {e0 n21}
     interface-peer {e1 n12}
     interface-peer {e2 n17}
@@ -558,8 +558,8 @@ node n19 {
 	!
     }
     canvas c1
-    iconcoords {181.0 412.0}
-    labelcoords {181.0 436.0}
+    iconcoords {131.0 413.0}
+    labelcoords {131.0 437.0}
     interface-peer {e0 n22}
     interface-peer {e1 n13}
     interface-peer {e2 n14}
@@ -572,8 +572,8 @@ node n20 {
 	!
     }
     canvas c1
-    iconcoords {180.0 562.0}
-    labelcoords {180.0 586.0}
+    iconcoords {130.0 563.0}
+    labelcoords {130.0 587.0}
     interface-peer {e0 n23}
     interface-peer {e1 n15}
     interface-peer {e2 n16}
@@ -607,8 +607,8 @@ node n21 {
 	!
     }
     canvas c1
-    iconcoords {293.0 267.0}
-    labelcoords {293.0 299.0}
+    iconcoords {236.0 261.0}
+    labelcoords {236.0 293.0}
     services {zebra OSPFv2 OSPFv3 IPForward}
     interface-peer {eth3 n18}
     interface-peer {eth0 n9}
@@ -654,8 +654,8 @@ node n22 {
 	!
     }
     canvas c1
-    iconcoords {343.0 395.0}
-    labelcoords {343.0 427.0}
+    iconcoords {238.0 394.0}
+    labelcoords {238.0 426.0}
     services {zebra OSPFv2 OSPFv3 IPForward}
     interface-peer {eth3 n19}
     interface-peer {eth1 n21}
@@ -693,8 +693,8 @@ node n23 {
 	!
     }
     canvas c1
-    iconcoords {317.0 547.0}
-    labelcoords {317.0 579.0}
+    iconcoords {239.0 551.0}
+    labelcoords {239.0 583.0}
     services {zebra OSPFv2 OSPFv3 IPForward}
     interface-peer {eth2 n20}
     interface-peer {eth1 n22}
@@ -860,7 +860,7 @@ canvas c1 {
 
 option global {
     interface_names no
-    ip_addresses no
+    ip_addresses yes
     ipv6_addresses no
     node_labels yes
     link_labels no
