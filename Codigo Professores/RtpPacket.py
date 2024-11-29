@@ -18,7 +18,7 @@ class RtpPacket:
 		header[0] = (header[0] | (cc & 0x0F)); # 4 bits
 		header[1] = (header[1] | marker << 7); # 1 bit
 		header[1] = (header[1] | (pt & 0x7f)); # 7 bits
-		header[2] = (seqnum >> 8); 
+		header[2] = (seqnum >> 8);
 		header[3] = (seqnum & 0xFF);
 		header[4] = (timestamp >> 24);
 		header[5] = (timestamp >> 16) & 0xFF;
@@ -31,7 +31,7 @@ class RtpPacket:
 		# set header and  payload
 		self.header = header
 		self.payload = payload
-		
+
 	def decode(self, byteStream):
 		"""Decode the RTP packet."""
 		self.header = bytearray(byteStream[:HEADER_SIZE])

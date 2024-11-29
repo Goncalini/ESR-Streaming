@@ -1,104 +1,160 @@
+import socket
+import threading
+import sys
+import time
+import TopologiaUtil
 import json
-from collections import defaultdict, deque
-import heapq
+from ServerWorker import ServerWorker
 
-# Carregar a topologia a partir do arquivo JSON
-with open('config.json', 'r') as file:
-    topologia = json.load(file)
+ServerHost = "10.0.0.10"
+BootPort = 5000
+ClientPort = 5001
+NodePort   = 5002
+ServerPort = 5050
+Points_of_Presence = ["10.0.13.2","10.0.12.2","10.0.11.2"]
 
-# Inicializar o grafo bidirecional
-grafo = defaultdict(dict)
+Streams_List = {'videos/video_BrskEdu.mp4': 7070, 'videos/movie.Mjpeg': 7072}
 
-# Preencher o grafo com as conexões bidirecionais e suas larguras de banda
-for ip, dados in topologia.items():
-    no_id = dados["id"]
-    for vizinho in dados["Vizinhos"]:
-        vizinho_id = vizinho["nome"]
-        largura_banda = vizinho["bandwidth"]
+class Server: 
+
+    def __init__ (self, host, port):
+        self.host = ServerHost #0.0.0.0
+        self.port = BootPort
+        self.nodes_active = {}
+        self.nodes = []
+        self.clients = []
+        self.running = True
+        self.videos = {}
+
+        self.streams = {video: ServerWorker(video, port) for video, port in Streams_List.items()}
+
+        self.stoprog = threading.Event()
+
         
-        # Adiciona a conexão nos dois sentidos para garantir bidirecionalidade
-        grafo[no_id][vizinho_id] = largura_banda
-        grafo[vizinho_id][no_id] = largura_banda
-
-# Escolher um nó raiz para iniciar a árvore
-raiz = 'n3'  
-
-# Função para construir a árvore a partir do grafo usando BFS
-def construir_arvore(grafo, raiz):
-    arvore = defaultdict(list)
-    visitados = set()
-    fila = deque([raiz])
-
-    while fila:
-        no_atual = fila.popleft()
-         
-        # Somente marcar o nó como visitado após processá-lo
-        visitados.add(no_atual)
-
-        # Para cada vizinho, adicionar aresta na árvore se ainda não foi visitado
-        for vizinho, largura_banda in grafo[no_atual].items():
-            if vizinho not in visitados:
-                # Adicionar a aresta apenas se ainda não estiver na lista de filhos
-                if (vizinho, largura_banda) not in arvore[no_atual]:
-                    arvore[no_atual].append((vizinho, largura_banda))
-                fila.append(vizinho)
-
-    return arvore
-
-# Construir a árvore a partir do nó raiz
-arvore_topologia = construir_arvore(grafo, raiz)
-
-# Exibir a árvore resultante
-for pai, filhos in arvore_topologia.items():
-    filhos_str = ", ".join([f"{filho} (bw: {bw})" for filho, bw in filhos])
-    print(f"{pai} -> [{filhos_str}]")
-
-def getparent(node):
-    for pai, filhos in arvore_topologia.items():
-        for filho, _ in filhos:
-            if filho == node:
-                #print(pai)
-                return pai
-    return None
-
-#getparent('n4')
-
-def melhor_caminho_dijkstra(grafo, raiz, destino):
-    # Usar uma heap para priorizar caminhos com maior largura de banda mínima
-    heap = [(-float('inf'), raiz, [])]  # (-largura_banda_minima, no_atual, caminho_atual)
-    visitados = set()
-
-    while heap:
-        largura_banda_minima, no_atual, caminho = heapq.heappop(heap)
-        largura_banda_minima = -largura_banda_minima  # Reverter o valor negativo
-
-        if no_atual in visitados:
-            continue
-
-        # Atualizar o caminho ao visitar o nó
-        caminho = caminho + [no_atual]
-        visitados.add(no_atual)
-
-        # Verificar se chegamos ao destino
-        if no_atual == destino:
-            return caminho, largura_banda_minima
-
-        # Adicionar vizinhos à heap
-        for vizinho, largura_banda in grafo[no_atual].items():
-            if vizinho not in visitados:
-                # A largura de banda mínima no caminho considera o menor valor até agora
-                nova_largura_banda_minima = min(largura_banda_minima, largura_banda)
-                heapq.heappush(heap, (-nova_largura_banda_minima, vizinho, caminho))
-
-    # Retornar vazio caso o destino não seja alcançável
-    return None, 0
+    
+    
+    def start_server(self):
+        try:
+            self.server_node_bootstrapper = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            self.server_node_bootstrapper.bind((self.host, self.port))
 
 
-# teste
-destino = 'n9'  # Substitua pelo nó de destino desejado
-caminho, largura_banda_minima = melhor_caminho_dijkstra(grafo, raiz, destino)
-if caminho:
-    print(f"Melhor caminho de {raiz} até {destino}: {' -> '.join(caminho)}")
-    print(f"Largura de banda mínima ao longo do caminho: {largura_banda_minima}")
-else:
-    print(f"Não foi possível alcançar o nó {destino} a partir de {raiz}.")
+            self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            self.client_socket.bind((self.host, ClientPort))
+
+            self.server_node_server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            self.server_node_server.bind((self.host, ServerPort))
+
+            self.server_node_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            self.server_node_socket.bind((self.host, NodePort))
+
+            
+
+            print("Server started")
+            
+            self.register_nodes()
+            
+        except Exception as e:
+            print(f"Error starting server: {e}")
+
+    def register_nodes(self):
+              while self.running:   
+                    try:
+                        data, address = self.server_node_bootstrapper.recvfrom(1024)
+                        print("Data: " + data.decode())
+                        self.nodes.append(address)
+                        if data.decode() not in self.nodes_active:
+                            self.nodes_active[data.decode()] = address
+                            print("Node " + data.decode() + " added")
+                            #print(self.nodes_active)
+                            #ajuda = self.nodes_active.get(data.decode())
+                            #print(self.get_ip_from_id(data.decode()))
+                            #print(ajuda)      
+                            #print("x")                        
+                          
+                        else:
+                            print("Node " + data.decode() + " already exists")
+                        #print(self.get_ip_from_id(data.decode()))
+                        help = TopologiaUtil.getparent(data.decode())
+                        #print(help)
+                        helpi = self.get_ip_from_id(help)
+                        #print(helpi)
+                        self.server_node_bootstrapper.sendto(helpi.encode(), address)
+                    except Exception as e:
+                        print(f"Error receiving data from client: {e}")
+ 
+    def register_clients(self):
+         #self.client_socket.settimeout(1) #impede que o socket fique bloqueado indefinidamente ao esperar por dados, permitindo verificar periodicamente a condição de parada.
+         while self.running:
+            try:
+                data, address = self.client_socket.recvfrom(1024)
+                #print("Data: " + data.decode())
+                print(f"Connect to Client {data.decode()} in {address}")
+                if data.decode() not in self.clients:
+                    self.clients.append(data.decode())
+                    print("Client " + data.decode() + " added")
+                else:
+                    print("Client " + data.decode() + " already exists")
+                self.client_socket.sendto(json.dumps(Points_of_Presence).encode(), address)
+            except Exception as e:
+                print(f"Error receiving data from client: {e}")
+
+
+    def request_stream(self):
+        #self.server_node_socket.settimeout(1) 
+        while not self.stoprog.is_set():
+            try:
+                data, address = self.server_node_socket.recvfrom(1024)
+                video = data.decode()
+                print(f"Requesting stream {video} from {address}")
+                if video in self.streams:
+                    self.server_node_socket.sendto(b'', address)
+                    self.streams[video].update_oNode_requesting(address[0])
+            except socket.timeout:
+                continue
+            except Exception as e:
+                print(f"Error receiving data from client: {e}")
+                break
+
+    def get_ip_from_id(self, id):
+        #a = self.nodes_active.get(id)
+        #print(a)
+        #print("b")
+        #if a[0] == "Server":
+        #    print("a")
+        #    return ServerHost
+        #else: 
+        #    return a[0]
+        if id == "Server":
+            return ServerHost
+        else:
+            return self.nodes_active.get(id)[0]
+    
+    def run(self):
+        server_thread = threading.Thread(target=self.start_server, daemon=True)
+        #server_thread2 = threading.Thread(target=self.register_nodes, daemon=True)
+        server_thread2 = threading.Thread(target=self.register_clients, daemon=True)
+        server_thread3 = threading.Thread(target=self.request_stream, daemon=True)
+
+        server_thread.start()
+        server_thread2.start()
+        server_thread3.start()
+        #server_thread2.start()
+
+        for stream in self.streams.values():
+            stream_thread = threading.Thread(target=stream.sendRtp, daemon=True)
+            stream_thread.start()
+
+        try:
+            while True:
+                pass  # Manter o servidor ativo
+        except KeyboardInterrupt:
+            print("Shutting down the server.")
+            self.running = False
+            server_thread.join()
+        
+        
+
+if __name__ == "__main__":
+    server = Server(ServerHost, BootPort)
+    server.run()
