@@ -1,9 +1,16 @@
-import socket
-import threading
-from PIL import Image, ImageTk
-import sys, traceback, os
-from tkinter import *
+
+#import socket
+#import threading
+#from PIL import Image, ImageTk
+#import sys, traceback, os
+#from tkinter import *
 from RtpPacket import RtpPacket
+#import time
+import socket, threading
+from tkinter import *
+from PIL import Image, ImageTk
+#from ..utils.config import RTP_PORT, SERVER_IP, VIDEO_FILES
+#from ..utils.stream.RtpPacket import RtpPacket
 import time
 
 CACHE_FILE_NAME = "cache-"
@@ -97,3 +104,4 @@ class ClientWorker:
         file.close()
         
         return cachename
+
