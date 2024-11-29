@@ -3,6 +3,7 @@ import threading
 import time
 import sys
 import json
+from tkinter import *
 
 
 ServerHost = "10.0.0.10"
@@ -10,23 +11,30 @@ BootPort = 5000
 ClientPort = 5001
 NodePort   = 5002
 RequestPort = 5003
-
+RtpPort = 5005
+from ClientWorker import ClientWorker
 
 
 class Client:
     def __init__(self, client_name, client_ip, filename):
         self.server_host = ServerHost
+        self.rtp_port = RtpPort
         self.client_name = client_name
         self.client_host = client_ip
         self.filename = filename
         self.points_of_presence = {}
         self.running = True
+        self.root = Tk()
         #socket para comunicação com o servidor e obter Points of Presence
         self.socket_client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         #self.socket_client.bind((client_ip, ClientPort))
         
         self.socket_stream = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket_stream.bind((client_ip, NodePort))
+
+    def createStream(self):
+        ClientWorker(self.root, self.filename)
+        self.root.mainloop()
 
     def connect_server(self):
         try:
@@ -66,6 +74,7 @@ class Client:
         client_thread.start()
 
         client.get_stream()
+        client.createStream()
 
         try:
             while self.running:

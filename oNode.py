@@ -59,14 +59,14 @@ class oNode:
             print(f"Error receiving parent from bootstrapper: {e}")
 
     def redirect_stream(self, rtp_socket, stream_name):
-        #rtp_socket.settimeout(1)
+        rtp_socket.settimeout(1)
         while not self.stoprog.is_set():
             try:
                 data, address = rtp_socket.recvfrom(40480)
                 print(f"Received data from {address}")
                 stream = self.stream_dick.get(stream_name)
                 for nod in stream["nodes_interested"]:
-                    rtp_socket.sendto(data, (nod, stream("port")))
+                    rtp_socket.sendto(data, (nod, stream["port"])) #())
             except socket.timeout:
                 continue
             except Exception as e:
@@ -83,23 +83,28 @@ class oNode:
         else:
             if self.parent is not None:
                 print("pika")
-                response_enconded = self.send_and_receive(self.socket_stream, video.encode(), self.parent, NodePort)
+                response_enconded = self.send_and_receive(self.socket_stream, video.encode(), self.parent, RequestPort)
                 print("ola2")
                 if response_enconded is None:
                     print("No responses from parent")
                     return
                 
                 rtpsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                rtpsocket.bind(self.node_id, stream["port"])
-
+                print("FODA SE")
+                rtpsocket.bind((self.node_ip, stream["port"]))
+                print("mimi")
                 stream["thread"] = threading.Thread(target=self.redirect_stream, args=(rtpsocket, video))
+                print("mimi 2")
                 stream["thread"].start()
+                print("mimi 3")
                 stream["running"] = True
+                print("mimi 4")
                 stream["nodes_interested"].add(address)
+                print("mimi 5")
                 self.stream_dick[video] = stream
 
     def receive_request(self):
-        #self.socket_request.settimeout(1)
+        self.socket_request.settimeout(1)
         while not self.stoprog.is_set():
             try:
                 data, address = self.socket_request.recvfrom(1024)

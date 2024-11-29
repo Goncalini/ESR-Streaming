@@ -5,11 +5,13 @@ import time
 import TopologiaUtil
 import json
 from ServerWorker import ServerWorker
+from tkinter import Tk
 
 ServerHost = "10.0.0.10"
 BootPort = 5000
 ClientPort = 5001
 NodePort   = 5002
+RequestPort = 5003
 ServerPort = 5050
 Points_of_Presence = ["10.0.13.2","10.0.12.2","10.0.11.2"]
 
@@ -46,7 +48,7 @@ class Server:
             self.server_node_server.bind((self.host, ServerPort))
 
             self.server_node_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            self.server_node_socket.bind((self.host, NodePort))
+            self.server_node_socket.bind((self.host, RequestPort))
 
             
 
@@ -100,7 +102,7 @@ class Server:
                 print(f"Error receiving data from client: {e}")
 
 
-    def request_stream(self):
+    def get_request_stream(self):
         #self.server_node_socket.settimeout(1) 
         while not self.stoprog.is_set():
             try:
@@ -134,7 +136,7 @@ class Server:
         server_thread = threading.Thread(target=self.start_server, daemon=True)
         #server_thread2 = threading.Thread(target=self.register_nodes, daemon=True)
         server_thread2 = threading.Thread(target=self.register_clients, daemon=True)
-        server_thread3 = threading.Thread(target=self.request_stream, daemon=True)
+        server_thread3 = threading.Thread(target=self.get_request_stream, daemon=True)
 
         server_thread.start()
         server_thread2.start()

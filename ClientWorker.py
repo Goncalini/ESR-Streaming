@@ -19,14 +19,14 @@ Streams_List = {'videos/video_BrskEdu.mp4': 7070, 'videos/movie.Mjpeg': 7072}
 
 class ClientWorker:
     def __init__(self, master, stream_name):
+        
         self.master = master
         #self.master.protocol("WM_DELETE_WINDOW", self.handler)
         self.master.title("RTP Client")
-        self.createWidgets()
         self.stream_name = stream_name
         self.server_host = ServerHost
-        self.rtp_port = RtpPort
-        self.server_port = Streams_List[stream_name]
+        #self.rtp_port = RtpPort
+        self.rtp_port = Streams_List[stream_name]
 
         self.frameNbr = 0
         self.timestamp = str(int(time.time() * 1000)) #evitar q o nome seja o mesmo para todos os clientes e nao escreverem todos no mesmo ficheiro uns por cima dos outros
@@ -35,12 +35,15 @@ class ClientWorker:
         self.rtp_stream_socket.bind(('', self.rtp_port))
 
         self.end_stream = threading.Event()
+        self.thread = threading.Thread(target=self.receiveRtp)
+
+        self.createWidgets()
 
     def createWidgets(self):
         """Build GUI."""
         self.playButton = Button(self.master, width=20, padx=3, pady=3)
         self.playButton["text"] = "Play"
-        self.playButton["command"] = threading.Thread(target=self.receiveRtp).start()
+        self.playButton["command"] = self.startRtpThread
         self.playButton.grid(row=1, column=0, padx=2, pady=2)
 
         self.closeButton = Button(self.master, width=20, padx=3, pady=3)
@@ -50,6 +53,11 @@ class ClientWorker:
 
         self.label: Label = Label(self.master, height=19)
         self.label.grid(row=0, column=0, columnspan=2, sticky=W+E+N+S, padx=5, pady=5)
+
+
+    def startRtpThread(self):
+        self.thread.start()
+
 
     def closeStream(self):
         self.master.destroy()
@@ -63,6 +71,7 @@ class ClientWorker:
             if data:
                 rtpPacket = RtpPacket()
                 rtpPacket.decode(data)
+
                 currFrameNbr = rtpPacket.seqNum()
                 print(f"Current Sequence Number: " + str(currFrameNbr))
 
@@ -70,11 +79,14 @@ class ClientWorker:
                     self.frameNbr = currFrameNbr
                     self.updateMovie(self.writeFrame(rtpPacket.getPayload()))
     
-    def updateMovie(self, image):
-        image = Image.open(image)
+    def updateMovie(self, imageFile):
+        if imageFile:
+            print(f"Updating movie penis ")
+        image = Image.open(imageFile)
         photo = ImageTk.PhotoImage(image)
-
-        self.label.configure(image=photo, height=image.size[1], width=image.size[0])
+        
+        # Dynamically set the label size to match the image
+        self.label.configure(image=photo, height=image.size[1], width=image.size[0]) 
         self.label.image = photo
                 
     def writeFrame(self, data):
