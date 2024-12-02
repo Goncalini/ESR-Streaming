@@ -1,3 +1,4 @@
+import os
 import socket
 import threading
 import time
@@ -32,6 +33,8 @@ class Client:
         self.socket_stream = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket_stream.bind((client_ip, NodePort))
 
+        self.signal = threading.Event()
+
     def createStream(self):
         ClientWorker(self.root, self.filename)
         self.root.mainloop()
@@ -48,11 +51,16 @@ class Client:
             for point in self.points_of_presence_list:
                 self.points_of_presence[point] = float('inf')
             print(self.points_of_presence)
+
+            self.signal.set()
+
         except Exception as e:
             print(f"Error connecting to server: {e}")
 
     def get_stream(self):
-        data = self.send_and_receive(self.socket_stream, self.filename.encode(), "10.0.13.2" , RequestPort)
+        print("PILAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEEEEEEEEEEEEEE")
+        #data = self.send_and_receive(self.socket_stream, self.filename.encode(), "10.0.13.2" , RequestPort)
+        data = self.send_and_receive(self.socket_stream, self.filename.encode(), self.get_best_point(), RequestPort)
         if data is None:
             print("Error: Could not get stream")
             sys.exit(1)
@@ -73,8 +81,11 @@ class Client:
         client_thread = threading.Thread(target=self.connect_server)
         client_thread.start()
 
+        self.signal.wait()
+
         client.get_stream()
         client.createStream()
+
 
         try:
             while self.running:
@@ -83,6 +94,37 @@ class Client:
             print("Shutting down the client.")
             self.running = False
             client_thread.join()
+
+    def get_best_point(self):
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAa")
+        for point in self.points_of_presence:
+            latencia = self.medir_latencia(point)
+            self.points_of_presence[point] = latencia
+            print(f"Latência para {point}: {latencia}")
+
+        best_point = min(self.points_of_presence, key=self.points_of_presence.get)
+        print(f"Best point of presence: {best_point}")
+
+        return best_point
+    
+
+    def medir_latencia(self, ip):
+        print("ENTREIIIIIIIIIIIIIIIIIIIII")
+        try:
+        # Executar o comando ping (1 pacote)
+            response = os.popen(f"ping -c 1 {ip}").read()
+            print(response)
+
+        # Verificar se "time=" está presente na resposta
+            if "time=" in response:
+            # Extrair a latência
+                latencia = response.split("time=")[1].split(" ")[0]
+                return float(latencia)
+
+            return float('inf')  # Latência infinita se não houver resposta
+        except Exception as e:
+            print(f"Erro ao medir a latência de {ip}: {e}")
+        return float('inf')
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
