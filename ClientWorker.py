@@ -80,15 +80,15 @@ class ClientWorker:
                 rtpPacket.decode(data)
 
                 currFrameNbr = rtpPacket.seqNum()
-                print(f"Current Sequence Number: " + str(currFrameNbr))
+                #print(f"Current Sequence Number: " + str(currFrameNbr))
 
                 if currFrameNbr > self.frameNbr:
                     self.frameNbr = currFrameNbr
                     self.updateMovie(self.writeFrame(rtpPacket.getPayload()))
     
     def updateMovie(self, imageFile):
-        if imageFile:
-            print(f"Updating movie penis ")
+        #if imageFile:
+        #    print(f"Updating movie")
         image = Image.open(imageFile)
         photo = ImageTk.PhotoImage(image)
         

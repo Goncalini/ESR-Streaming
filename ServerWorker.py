@@ -29,8 +29,8 @@ class ServerWorker:
             if frame:
                 frameNbr = self.videoStream.frameNbr()
                 try:
-                    print(f"Sending frame {frameNbr}")
-                    print(f"oNode_Ip: {self.oNode_requesting}")
+                    #print(f"Sending frame {frameNbr}")
+                    #print(f"oNode_Ip: {self.oNode_requesting}")
                     self.rtp_socket.sendto(self.makeRtp(frame, frameNbr), (self.oNode_requesting, self.streamPort))
                 except Exception as e:
                     #print(f"Error sending frame: {e}")

@@ -2,11 +2,14 @@ import socket
 import threading
 import sys
 
+
 bootstrapper_host = "10.0.0.10"
 bootstrapper_port = 5000
 
 NodePort = 5002
 RequestPort = 5003
+MonitorPOP = 5059
+MonitorPort = 5069
 
 
 Streams_List = {'videos/video_BrskEdu.mp4': 7070, 'videos/movie.Mjpeg': 7072}
@@ -32,6 +35,8 @@ class oNode:
 
         self.stoprog = threading.Event()
 
+        self.lock = threading.Lock()
+
         self.thread_stream = threading.Thread(target=self.receive_request)
         
     
@@ -47,6 +52,13 @@ class oNode:
 
             self.bootstrapper_socket.connect((self.bootstrapper_host, self.bootstrapper_port))
             self.bootstrapper_socket.sendall(self.node_id.encode())
+
+            self.monitoring_client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            self.monitoring_client.bind((self.node_ip, MonitorPOP))
+
+            self.timestamp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            self.timestamp_socket.bind((self.node_ip, MonitorPort))
+
 
         except Exception as e:
             print(f"Error connecting to bootstrapper: {e}")
@@ -79,28 +91,28 @@ class oNode:
         if stream["running"]:
             stream["nodes_interested"].add(address)
             self.stream_dick[video] = stream
-            print("ola")
+            #print("ola")
         else:
             if self.parent is not None:
-                print("pika")
+                ##print("pika")
                 response_enconded = self.send_and_receive(self.socket_stream, video.encode(), self.parent, RequestPort)
-                print("ola2")
+                #print("ola2")
                 if response_enconded is None:
                     print("No responses from parent")
                     return
                 
                 rtpsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                print("FODA SE")
+                #print("FODA SE")
                 rtpsocket.bind((self.node_ip, stream["port"]))
-                print("mimi")
+                #print("mimi")
                 stream["thread"] = threading.Thread(target=self.redirect_stream, args=(rtpsocket, video))
-                print("mimi 2")
+                ##print("mimi 2")
                 stream["thread"].start()
-                print("mimi 3")
+                #print("mimi 3")
                 stream["running"] = True
-                print("mimi 4")
+                #print("mimi 4")
                 stream["nodes_interested"].add(address)
-                print("mimi 5")
+                #print("mimi 5")
                 self.stream_dick[video] = stream
 
     def receive_request(self):
@@ -121,27 +133,59 @@ class oNode:
 
         
     def send_and_receive(self, socket, message, ip, port, timeout = 2.0 , retries = 3):
-        print("1")
+        #print("1")
         socket.sendto(message, (ip, port))
-        print("2")
+        #print("2")
         socket.settimeout(timeout)
-        print("3")
+        #print("3")
         for _ in range(retries):
             try:
-                print("4")
+                #print("4")
                 data, _ = socket.recvfrom(1024)
-                print("5")
+                #print("5")
                 return data
             except socket.timeout:
-                print("6")
+                #print("6")
                 socket.sendto(message, (ip, port))
-        print("7")
+        #print("7")
         return None
+    
+    def remove_cliente(self, ip):
+        with self.lock:
+            for stream in self.stream_dick.values():
+                if ip in stream["nodes_interested"]:
+                    stream["nodes_interested"].remove(ip)
+                    self.stream_dick[stream] = stream
+
+    def monitor_pop(self):
+        while not self.stoprog.is_set():
+            try:
+                data, address = self.monitoring_client.recvfrom(1024)
+                if data == b'':
+                    self.remove_cliente(address[0])
+                
+            except Exception as e:
+                print(f"An error occurred eliminating Client 3: {e}")
+                break
+
+    def handle_timestamp(self):
+        while not self.stoprog.is_set():
+            try:
+                data, address = self.timestamp_socket.recvfrom(1024)
+                self.timestamp_socket.sendto(b'', (address[0], MonitorPort))
+            except Exception as e:
+                print(f"An error occurred handling timestamp: {e}")
+                break
+                
     
     def run(self):
         self.connect_to_bootstrapper()
         self.get_parent_from_bootstrapper()
         self.thread_stream.start()
+        self.threadMonitorPop = threading.Thread(target=self.monitor_pop)
+        self.threadMonitorPop.start()
+        self.timestampthread = threading.Thread(target=self.handle_timestamp)
+        self.timestampthread.start()
         #while self.running:
         #    pass
 

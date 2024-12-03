@@ -367,8 +367,8 @@ node n10 {
 	!
     }
     canvas c1
-    iconcoords {444.0 394.0}
-    labelcoords {444.0 426.0}
+    iconcoords {444.0 371.0}
+    labelcoords {444.0 403.0}
     services {zebra OSPFv2 OSPFv3 IPForward}
     interface-peer {eth0 n8}
     interface-peer {eth1 n9}

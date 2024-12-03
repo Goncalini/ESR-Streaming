@@ -65,7 +65,7 @@ def getparent(node):
                 return pai
     return None
 
-getparent('n4')
+#print(getparent('n5'))
 
 def melhor_caminho_dijkstra(grafo, raiz, destino):
     # Usar uma heap para priorizar caminhos com maior largura de banda mínima
