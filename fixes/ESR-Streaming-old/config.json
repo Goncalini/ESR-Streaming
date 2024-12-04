@@ -1,0 +1,271 @@
+{
+"10.0.0.1" : {
+    "id": "n3",
+    "interfaces" : [
+        "10.0.22.1",
+        "10.0.3.1",
+        "10.0.23.1"
+    ],
+    "Vizinhos": [
+        {
+            "nome": "n2",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n4",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n5",
+            "bandwidth": 1000
+        }
+    ]
+},
+"10.0.22.2" : {
+    "id": "n2",
+    "interfaces" : [
+        "10.0.4.1",
+        "10.0.6.1"
+    ],
+    "Vizinhos": [
+        {
+            "nome": "n6",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n5",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n3",
+            "bandwidth": 1000
+        }
+    ]
+},
+"10.0.3.2" : {
+    "id": "n5",
+    "interfaces" : [
+        "10.0.4.2",
+        "10.0.17.1",
+        "10.0.8.1",
+        "10.0.16.1"
+    ],
+    "Vizinhos": [
+        {
+            "nome": "n2",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n3",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n4",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n6",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n7",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n8",
+            "bandwidth": 1000
+        }
+    ]
+},
+"10.0.23.2" : {
+    "id": "n4",
+    "interfaces" : [
+        "10.0.5.1",
+        "10.0.7.1"
+    ],
+    "Vizinhos": [
+        {
+            "nome": "n3",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n5",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n7",
+            "bandwidth": 1000
+        }
+    ]
+},
+"10.0.6.2" : {
+    "id": "n6",
+    "interfaces" : [
+        "10.0.17.2",
+        "10.0.18.1",
+        "10.0.13.1"
+    ],
+    "Vizinhos": [
+        {
+            "nome": "n2",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n5",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n10",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n9",
+            "bandwidth": 1000
+        }
+    ]
+},
+"10.0.8.2" : {
+    "id": "n8",
+    "interfaces" : [
+        "10.0.20.1",
+        "10.0.12.1",
+        "10.0.21.1"
+    ],
+    "Vizinhos": [
+        {
+            "nome": "n5",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n11",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n9",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n10",
+            "bandwidth": 1000
+        }
+    ]
+},
+"10.0.7.2" : {
+    "id": "n7",
+    "interfaces" : [
+        "10.0.16.2",
+        "10.0.19.1",
+        "10.0.11.1"
+    ],
+    "Vizinhos": [
+        {
+            "nome": "n4",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n5",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n10",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n11",
+            "bandwidth": 1000
+        }
+    ]
+},
+"10.0.13.2" : {
+    "id": "n9",
+    "interfaces" : [
+        "10.0.20.2",
+        "10.0.14.1"
+    ],
+    "Vizinhos": [
+        {
+            "nome": "n6",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n8",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n10",
+            "bandwidth": 1000
+        }
+    ]
+},
+"10.0.12.2" : {
+    "id": "n10",
+    "interfaces" : [
+        "10.0.14.2",
+        "10.0.18.2",
+        "10.0.19.2",
+        "10.0.15.1"
+    ],
+    "Vizinhos": [
+        {
+            "nome": "n9",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n6",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n8",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n7",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n11",
+            "bandwidth": 1000
+        }
+    ]
+},
+"10.0.11.2" : {
+    "id": "n11",
+    "interfaces" : [
+        "10.0.15.2",
+        "10.0.21.1"
+    ],
+    "Vizinhos": [
+        {
+            "nome": "n10",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n8",
+            "bandwidth": 1000
+        },
+        {
+            "nome": "n7",
+            "bandwidth": 1000
+        }
+    ]
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
