@@ -189,6 +189,31 @@ class oNode:
         #while self.running:
         #    pass
 
+        try:
+            while True:
+                pass  # Manter o servidor ativo
+        except KeyboardInterrupt:
+            print("Shutting down Node")
+            self.stoprog.set()
+            for stream in self.stream_dick.values():
+                stream["running"] = False
+                if stream["thread"] is not None:
+                    stream["thread"].join()
+                    stream["thread"] = None
+            #join threads
+            self.thread_stream.join()
+            self.threadMonitorPop.join()
+            self.timestampthread.join()
+            
+            #close sockets
+            self.socket_stream.close()
+            self.socket_request.close()
+            self.monitoring_client.close()
+            self.timestamp_socket.close()
+            self.bootstrapper_socket.close()
+            
+
+
 if __name__ == "__main__":
 
     if len(sys.argv) < 2:

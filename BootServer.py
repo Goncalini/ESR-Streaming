@@ -153,7 +153,18 @@ class Server:
         except KeyboardInterrupt:
             print("Shutting down the server.")
             self.running = False
+            self.stoprog.set()
             server_thread.join()
+            server_thread2.join()
+            server_thread3.join()
+            for stream in self.streams.values():
+                stream.close()
+            #close all socket
+            self.server_node_bootstrapper.close()
+            self.client_socket.close()
+            self.server_node_server.close()
+            self.server_node_socket.close()
+
         
         
 

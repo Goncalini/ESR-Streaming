@@ -288,7 +288,18 @@ class Client:
         except KeyboardInterrupt:
             print("Shutting down the client.")
             self.running = False
+            ClientWorker.closeStream()
             client_thread.join()
+            for thread in self.threads:
+                thread.join()
+            
+            #close all socket
+            self.socket_client.close()
+            self.socket_stream.close()
+            self.socket_monitor.close()
+            self.stop.set()
+            
+            
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
