@@ -1,0 +1,34 @@
+-> Melhores caminhos, uma arvore dinamica e não estática
+-> O cliente decide qual o melhor para se ligar primeiros por causa de perdas e etc...
+-> Ambos os clientes que pedem o mesmo video precisam de ver o exato minimo video
+-> Evitar perdas de perfomance
+-> Mais q um socket para rececao de video, minimo de perguntas possiveis para conectar, 1 socket para cada video, é preciso uma pergunta (Recebi um pacote, para quem tenho de enviar?)
+-> Evitar mandar coisas para ninguem, so é distribuido se for pedido, mas o video esta sempre a correr localmente
+-> Algum controlo de concorrencia
+-> Usar UDP, melhor para recuperações de falhas (complementar)
+-> Se o servidor tiver que tratar de construir as cenas (centralizado) é mais facil mas muito custoso para o servidor
+-> CDN com multicast
+-> Na rede de acesso é a rede que decide, nao somos nos que decidimos so temos de saber o endereço, so controlamos em CDN, mas tem de estar presente na topologia
+-> Na camada do meio se tiver muita latencia pede a outro melhor
+-> o cliente so ve do lado esquerdo
+-> mandamos diretamente para os routers na linha do meio, mas se mandarmos o cliente a baixo e reinicializamos a ligacao e mudarmos a latencia
+ele tem de escolher outro caminho (versao simples)*
+
+
+
+
+
+
+
+
+-> Cliente poder ver varias streams em tabs diferentes (fazer so depois do trabalho principal feito)
+-> Se trocarmos de um servidor para outro com menos de 5 fotogramas o cliente nem nota -- Parte mais dificil*
+
+
+Questoes
+
+-> Primeiro fazer funcionar e depois tratar da arvore e dos caminhos ou vice versa? --> Se for centralizado, sim
+-> Para saber o melhor caminho usar um algoritmo e as perdas serem as heuristicas?? Viavel? --> Sim
+                |-> Viavel, fazer um disktraa de x em x segundo, opcão mais simples mas primeiros --> Boa Solução
+                |-> A opcao mais dificil é fazer de forma distribuida, um nodo deixa de ser vizinho e avisa a outro que passa a ser vizinho de outro com menor latencia(?) --> As ligaçoes ja existem previamente
+-> Criar um socket para cada video é mesmo a melhor opção? ---> Sim, para evitar perdas de perfomance

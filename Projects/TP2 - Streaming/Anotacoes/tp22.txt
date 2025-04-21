@@ -1,0 +1,54 @@
+jitter, perdas, latencia para medir as melhores ligações
+
+as cenas podem se ligar diretamente tamos fodidos
+
+
+Etapa 1
+--> Passar ficheiro de config no bootstraper(servidor), ele tem as infos da topologia
+--> Ele envia as cenas até aos pontos de acesso
+--> De x em x segundos troca de pacotes para eles darem update à topologia
+--> Cada ponto de acesso tem uma arvore
+
+Etapa 2
+--> O cliente tem hardcoded os endereços para que pode envia
+--> O envia vais buscar as cenas até aos pontos de acesso
+--> Envia de x em x segundo envia diretamnete e ver qual latencia é menor, nao precisa de arvore
+
+
+
+--> para aumentar o valor da ligacao ter um handler para quando morrer enviar ao server
+
+
+
+
+
+
+Mais para a frente
+--> Ter mais métricas para calcular a melhor arvores, numeros de sequencia e outras cenas
+--> os nos a volta percebem o timeout, e enviam aos bootstrapper que o nodo morreu e o gajo refaz a arvore
+--> 
+
+
+
+
+
+--> thread para stream e outra para aceitar a stream
+
+--> Alterar json para id ser a chave
+--> COnstuir o grafo já com os endereços
+
+
+
+
+
+
+
+
+
+
+
+
+
+uma arvore para cada ponto de presença
+nao preciso de protocolos a nao ser que meça a largura de banda, so preciso de pacotes vazios e calcular os time stamps
+as perdas (n seq) deve se aos pedidos e nao ao streaming, envia pedido e recebe resposta
