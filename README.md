@@ -1,4 +1,5 @@
-# Pratical Assignment and Theroy Material of the course "Engenharia de Serviços em Rede" - Streaming Multicast and dynamic 
+# ESR - Network Services Engineering
+Pratical Assignment and Theroy Material of the course "Engenharia de Serviços em Rede" - Streaming Multicast and dynamic 
 
 Grupo:
 
